@@ -5,6 +5,16 @@ using System.Linq;
 
 public class CellMetabolism : MonoBehaviour {
 
+    static int _populationSize = 0;
+
+    public static int populationSize
+    {
+        get
+        {
+            return _populationSize;
+        }
+    }
+
     [SerializeField, Range(0, 1)]
     float motherSize = 0.75f;
 
@@ -31,6 +41,48 @@ public class CellMetabolism : MonoBehaviour {
 
     [SerializeField]
     float metabolismFactor = 0.05f;
+
+    [SerializeField]
+    int genomeSize = 64;
+
+    bool[] genome;
+
+    void Start()
+    {
+        _populationSize += 1;
+
+        if (genome == null)
+        {
+            CreateGenome();    
+        } else
+        {
+            MitosisMutate();
+        }
+    }
+
+    void CreateGenome()
+    {
+        genome = new bool[genomeSize];
+        for (int i=0; i<genomeSize; i++)
+        {
+            genome[i] = Random.value < 0.5f;
+        }
+    }
+
+    void MitosisMutate()
+    {
+        for (int i=0; i<mitosisMutations; i++)
+        {
+            int pos = Random.Range(0, genomeSize);
+            genome[pos] = !genome[pos];
+        }
+    }
+
+    public void Mutate()
+    {
+        int pos = Random.Range(0, genomeSize);
+        genome[pos] = !genome[pos];
+    }
 
     void Update()
     {
@@ -69,5 +121,6 @@ public class CellMetabolism : MonoBehaviour {
     void Kill()
     {
         this.enabled = false;
+        GetComponent<Rigidbody>().isKinematic = true;
     }
 }
