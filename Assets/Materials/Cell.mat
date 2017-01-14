@@ -133,7 +133,7 @@ Material:
     m_Colors:
     - first:
         name: _Color
-      second: {r: 0.64330196, g: 0.77507734, b: 0.891, a: 0.128}
+      second: {r: 0.88758343, g: 0.891, b: 0.64330196, a: 0.128}
     - first:
         name: _EdgeColor
       second: {r: 0.647, g: 0.647, b: 0.647, a: 1}
