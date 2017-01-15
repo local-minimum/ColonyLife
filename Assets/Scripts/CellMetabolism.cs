@@ -206,4 +206,17 @@ public class CellMetabolism : MonoBehaviour {
     {
         this.enabled = false;
     }
+
+    int burnCount = 0;
+    int maxBurn = 20;
+
+    public void Burn()
+    {
+        burnCount++;
+
+        if (burnCount > maxBurn)
+        {
+            Destroy(gameObject);
+        }
+    }
 }

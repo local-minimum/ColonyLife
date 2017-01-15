@@ -37,8 +37,9 @@ public class ManipulationRay : MonoBehaviour {
         CultureManipulator.OnManipulation -= CultureManipulator_OnManipulation;
     }    
 
-    Vector3 startFocus;
+    Vector3 focusPoint;
     Vector3 inputStartPos;
+    LayerMask mask;
 
     private void CultureManipulator_OnManipulation(ManipulationMode mode, ManipulationEventType modeType, Ray r, LayerMask layers)
     {
@@ -46,11 +47,12 @@ public class ManipulationRay : MonoBehaviour {
         {
             if (modeType == ManipulationEventType.Start)
             {                
-                startFocus = r.GetPoint(rayFocusDepth);
+                focusPoint = r.GetPoint(rayFocusDepth);
                 inputStartPos = Input.mousePosition;
-                manipulationRay.SetPosition(1, transform.InverseTransformPoint(startFocus));
+                manipulationRay.SetPosition(1, transform.InverseTransformPoint(focusPoint));
                 manipulationRay.enabled = true;
                 Cursor.visible = false;
+                mask = layers;
 
             } else
             {                
@@ -64,8 +66,18 @@ public class ManipulationRay : MonoBehaviour {
 		if (manipulationRay.enabled)
         {
             Vector2 delta = (Input.mousePosition - inputStartPos);
-            startFocus += new Vector3(delta.x, 0, delta.y) * moveScale + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1, 1f)) * moveNoise;
-            manipulationRay.SetPosition(1, transform.InverseTransformPoint(startFocus));
+            focusPoint += new Vector3(delta.x, 0, delta.y) * moveScale + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1, 1f)) * moveNoise;
+            manipulationRay.SetPosition(1, transform.InverseTransformPoint(focusPoint));
+            Ray r = new Ray(transform.position, (focusPoint - transform.position).normalized);
+            RaycastHit[] hits = Physics.RaycastAll(r, rayFocusDepth, mask);
+            for (int i=0; i<hits.Length; i++)
+            {
+                CellMetabolism cell = hits[i].transform.GetComponent<CellMetabolism>();
+                if (cell)
+                {
+                    cell.Burn();
+                }
+            }
         }
 	}
 }
