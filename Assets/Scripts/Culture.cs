@@ -54,9 +54,24 @@ public class Culture : MonoBehaviour
         return cell;
     }
 
-    void Update()
+    void OnEnable()
     {
-        if (Input.GetMouseButton(0))
+        CultureManipulator.OnManipulation += CultureManipulator_OnManipulation;
+    }
+
+    void OnDisable()
+    {
+        CultureManipulator.OnManipulation -= CultureManipulator_OnManipulation;
+    }
+
+    void OnDestroy()
+    {
+        CultureManipulator.OnManipulation -= CultureManipulator_OnManipulation;
+    }
+
+    private void CultureManipulator_OnManipulation(ManipulationMode mode, ManipulationEventType modeType, Ray r, LayerMask layers)
+    {
+        if (mode == ManipulationMode.BatchTransfer && modeType == ManipulationEventType.Instant)
         {
             List<CellMetabolism> parentals = CellMetabolism.SamplePopulation(populationStartSize).ToList();
             CellMetabolism.WipePopulation();
