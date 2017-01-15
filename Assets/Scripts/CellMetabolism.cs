@@ -15,6 +15,35 @@ public class CellMetabolism : MonoBehaviour {
         }
     }
 
+    static List<CellMetabolism> _population = new List<CellMetabolism>();
+
+    public static IEnumerable<CellMetabolism> SamplePopulation(int count)
+    {
+        for (int i=0; i<count; i++)
+        {
+            CellMetabolism cell = _population[Random.Range(0, _population.Count)];
+            cell.enabled = false;
+            _population.Remove(cell);
+            yield return cell;
+        }
+    }
+
+    public static void WipePopulation()
+    {
+        for (int i=0, l=_population.Count; i< l; i++)
+        {
+            CellMetabolism cell = _population[i];
+            cell.enabled = false;
+            Destroy(cell.gameObject);
+        
+        }
+        
+        _populationSize = 0;
+    }
+
+    [HideInInspector]
+    public Culture culture;
+
     [SerializeField, Range(0, 1)]
     float motherSize = 0.75f;
 
@@ -49,18 +78,47 @@ public class CellMetabolism : MonoBehaviour {
 
     void Start()
     {
-        _populationSize += 1;
+        UpdateSize();
+    }
 
-        if (genome == null)
-        {
-            CreateGenome();    
-        } else
+    public void CopyGenome(CellMetabolism other, bool mitosisMutate)
+    {
+        genomeSize = other.genomeSize;
+        genome = new bool[genomeSize];
+        other.genome.CopyTo(genome, 0);
+
+        if (mitosisMutate)
         {
             MitosisMutate();
         }
     }
 
-    void CreateGenome()
+    public void ResetAge()
+    {
+        age = 0;
+    }
+
+    public void SetNutrientState(float value)
+    {
+        nutrientState = value;
+    }
+
+    void OnEnable()
+    {
+        if (!_population.Contains(this))
+        {
+            _populationSize += 1;
+            _population.Add(this);
+        }
+    }
+
+    void OnDestroy()
+    {
+        _populationSize--;
+        _population.Remove(this);
+    }
+
+    public void CreateGenome()
     {
         genome = new bool[genomeSize];
         for (int i=0; i<genomeSize; i++)
@@ -91,11 +149,18 @@ public class CellMetabolism : MonoBehaviour {
     void Update()
     {
         nutrientState = Mathf.Clamp01(nutrientState + Nutrient.GetCollidingNutrients(transform).Select(e => NutrientValue(e)).Sum() * metabolismFactor * Time.deltaTime);
-        transform.localScale = Vector3.one * Mathf.Lerp(viewSizeMin, viewSizeMax, nutrientState);
+
+        UpdateSize();
+
         if (nutrientState >= 1f)
         {
             Clone();
         }
+    }
+
+    void UpdateSize()
+    {       
+        transform.localScale = Vector3.one * Mathf.Lerp(viewSizeMin, viewSizeMax, nutrientState);
     }
 
     Dictionary<bool[], float> nutrientLookup = new Dictionary<bool[], float>();
@@ -103,52 +168,10 @@ public class CellMetabolism : MonoBehaviour {
     float NutrientValue(Nutrient nutrient)
     {
         if (!nutrientLookup.Keys.Contains(nutrient.nutrientGenome)) {
-            nutrientLookup[nutrient.nutrientGenome] = CalculateNutrientEffect(nutrient);
+            nutrientLookup[nutrient.nutrientGenome] = nutrient.CalculateNutrientEffect(genomeSize, genome);
         }
 
         return nutrientLookup[nutrient.nutrientGenome];
-    }
-
-    float CalculateNutrientEffect(Nutrient nutrient)
-    {
-
-        int maxGain = 0;
-        int maxLoss = 0;
-
-        for (int offset = 0, endOffset = genomeSize - nutrient.nutrientSize; offset < endOffset; offset++)
-        {
-            int gains = 0;
-            for (int genPos= offset, endJ = offset + nutrient.nutrientSize, nutrPos=0; genPos< endJ; genPos++, nutrPos++)
-            {
-                if (nutrient.nutrientGenome[nutrPos] == genome[genPos])
-                {
-                    gains++;
-                }
-            }
-            int loss = nutrient.nutrientSize - gains;
-            if (gains > maxGain)
-            {
-                maxGain = gains;
-            }
-            if (loss > maxLoss)
-            {
-                maxLoss = loss;
-            }
-        }
-
-        if (maxGain == nutrient.nutrientSize)
-        {
-            Debug.Log("Optimum Reached");
-        }
-
-        if (maxGain >= maxLoss)
-        {
-            return maxGain;
-        } else
-        {
-            return maxLoss;
-        }
-        
     }
 
     void Clone()
@@ -156,16 +179,17 @@ public class CellMetabolism : MonoBehaviour {
         //Add a new cell cycle to self
         age++;
 
-        if (_populationSize < 3000)
+        if (_populationSize < culture.populationMaxSize)
         {
             //Create daughter
-            Vector3 position = transform.TransformPoint(new Vector3(Random.Range(-0.5f, 1), Random.Range(-1, 1), Random.Range(-1, 1)).normalized);
+            Vector3 position = transform.TransformPoint(new Vector3(Random.Range(-0.5f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized);
             GameObject daughter = Instantiate(gameObject, position, Quaternion.identity, transform.parent);
 
             //Set daughter params
             CellMetabolism daughterMetabolism = daughter.GetComponent<CellMetabolism>();
             daughterMetabolism.age = Mathf.FloorToInt(age * daughterAge);
             daughterMetabolism.nutrientState = nutrientState * (1 - motherSize);
+            daughterMetabolism.CopyGenome(this, true);
         }
 
         //Shelf mother if too many kids

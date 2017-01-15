@@ -14,17 +14,23 @@ public class Media : MonoBehaviour {
     int[] nutrientAmmounts;
 
     [SerializeField]
+    float[] nutrientPositive;
+
+    [SerializeField]
+    float[] nutrientDetrimental;
+
+    [SerializeField]
     Transform beaker;
 
 	void Start () {
 		for (int i=0; i<nutrientSizes.Length; i++)
         {
-            CreateNutrient(nutrientSizes[i], nutrientAmmounts[i]);
+            CreateNutrient(nutrientSizes[i], nutrientAmmounts[i], nutrientPositive[i], nutrientDetrimental[i]);
         }
 	}
 
 
-    void CreateNutrient(int size, int count)
+    void CreateNutrient(int size, int count, float positive, float detrimental)
     {
         Nutrient template = Instantiate(prefab);
         bool[] nutrientGenome = Nutrient.CreateNutrientGenome(size);
@@ -32,6 +38,7 @@ public class Media : MonoBehaviour {
         template.beaker = beaker;
         template.transform.SetParent(transform);
         template.transform.position = beaker.TransformPoint(new Vector3(Random.Range(-1, 1), 0, Random.Range(-1, 1)));
+        template.SetEffects(positive, detrimental);
 
         for (int i = 1; i < count; i++)
         {

@@ -40,6 +40,12 @@ public class Nutrient : MonoBehaviour {
     [HideInInspector]
     public bool[] nutrientGenome;
 
+    [SerializeField]
+    float nutrientPositiveFactor = 1f;
+
+    [SerializeField]
+    float nutrientDetrimentalFactor = 1f;
+
     public static bool[] CreateNutrientGenome(int nutrientSize)
     {
         bool[] nutrientGenome = new bool[nutrientSize];
@@ -73,6 +79,12 @@ public class Nutrient : MonoBehaviour {
     {
         this.nutrientGenome = nutrientGenome;
         nutrientSize = nutrientGenome.Length;      
+    }
+
+    public void SetEffects(float positive, float detrimental)
+    {
+        nutrientPositiveFactor = positive;
+        nutrientDetrimentalFactor = detrimental;
     }
 
     void OnDestroy()
@@ -114,5 +126,50 @@ public class Nutrient : MonoBehaviour {
             direction.z = Mathf.Abs(direction.z);
         }
     }
-    
+
+    public float CalculateNutrientEffect(int genomeSize, bool[] genome)
+    {
+
+        float maxGain = 0;
+        float maxLoss = 0;
+
+        for (int offset = 0, endOffset = genomeSize - nutrientSize; offset < endOffset; offset++)
+        {
+            int gains = 0;
+            for (int genPos = offset, endJ = offset + nutrientSize, nutrPos = 0; genPos < endJ; genPos++, nutrPos++)
+            {
+                if (nutrientGenome[nutrPos] == genome[genPos])
+                {
+                    gains++;
+                }
+            }
+            int loss = nutrientSize - gains;
+            if (gains > maxGain)
+            {
+                maxGain = gains;
+            }
+            if (loss > maxLoss)
+            {
+                maxLoss = loss;
+            }
+        }
+
+        if (maxGain >= nutrientSize)
+        {
+            Debug.Log("Optimum Reached");
+        }
+
+        maxGain *= nutrientPositiveFactor;
+        maxLoss *= nutrientDetrimentalFactor;
+
+        if (maxGain >= maxLoss)
+        {
+            return maxGain;
+        }
+        else
+        {
+            return -maxLoss;
+        }
+
+    }
 }
