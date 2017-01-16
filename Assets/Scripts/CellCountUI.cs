@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class CellCountUI : MonoBehaviour {
 
@@ -10,6 +11,9 @@ public class CellCountUI : MonoBehaviour {
 
     [SerializeField]
     Text popSizeDoubleTime;
+
+    [SerializeField]
+    GraphSprite popSizeGraph;
 
     float log2 = Mathf.Log(2f);
 
@@ -40,7 +44,10 @@ public class CellCountUI : MonoBehaviour {
 
     [SerializeField, Range(0, 1)]
     float experimentTimeSampleFreq = 1 / 3f;
-    
+
+    [SerializeField]
+    int gtTimeDelta = 5;
+
     IEnumerator<WaitForSeconds> Recorder(int curCount) {
 
         //Getting out of previous recordings and ensuring all data needed is up to date;
@@ -51,6 +58,7 @@ public class CellCountUI : MonoBehaviour {
         float nextTime = 0 + experimentTimeSampleFreq;
         times.Add(0);
         counts.Add(curCount);
+        popSizeGraph.Plot(times.ToArray(), counts.Select(e => (float) e).ToArray());
         recording = true;
 
         bool updateUI = true;
@@ -65,7 +73,7 @@ public class CellCountUI : MonoBehaviour {
 
                 curCount = CellMetabolism.populationSize;
                 counts.Add(curCount);
-
+                popSizeGraph.SetData(times.ToArray(), counts.Select(e => (float)e).ToArray());
                 records++;
                 updateUI = true;
             }
@@ -75,10 +83,10 @@ public class CellCountUI : MonoBehaviour {
 
                 cellCount.text = curCount.ToString();
 
-                if (records > 1)
+                if (records >= gtTimeDelta)
                 {
-                    int prevSize = counts[records - 2];
-                    float deltaTime = time - times[records - 2];
+                    int prevSize = counts[records - gtTimeDelta];
+                    float deltaTime = time - times[records - gtTimeDelta];
 
                     float sizeFactor = curCount / (float)prevSize;
                     float doublingTime = deltaTime * log2 / Mathf.Log(sizeFactor);

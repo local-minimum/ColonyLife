@@ -682,6 +682,99 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 564876214}
+--- !u!1 &1082321278
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1082321279}
+  - component: {fileID: 1082321282}
+  - component: {fileID: 1082321281}
+  - component: {fileID: 1082321280}
+  m_Layer: 5
+  m_Name: PopSizePlot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1082321279
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1082321278}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1092566970}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: -233.88}
+  m_SizeDelta: {x: -10, y: 200}
+  m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &1082321280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1082321278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 414e81507ecedfc4a861e71bee960c64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetImage: {fileID: 1082321281}
+  imageWidth: 300
+  imageHeight: 200
+  backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  curveColor: {r: 0.21799994, g: 0, b: 1, a: 1}
+  curveGradientColor: {r: 0.622, g: 0.622, b: 0.622, a: 0.584}
+  xMin: 0
+  xMax: 72
+  xTicks: []
+  yMin: 0
+  yMax: 72
+  yTicks: []
+  yLog2: 1
+--- !u!114 &1082321281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1082321278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &1082321282
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1082321278}
 --- !u!1 &1092566969
 GameObject:
   m_ObjectHideFlags: 0
@@ -715,6 +808,7 @@ RectTransform:
   - {fileID: 564876215}
   - {fileID: 1244578552}
   - {fileID: 1956611554}
+  - {fileID: 1082321279}
   m_Father: {fileID: 1997609080}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1205,7 +1299,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 10, y: 10}
-  m_SizeDelta: {x: 42, y: 42}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1440941615
 MonoBehaviour:
@@ -1647,7 +1741,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellCount: {fileID: 1332964731}
   popSizeDoubleTime: {fileID: 564876217}
+  popSizeGraph: {fileID: 1082321280}
   experimentTimeSampleFreq: 0.33333334
+  gtTimeDelta: 5
 --- !u!1 &2028993287
 GameObject:
   m_ObjectHideFlags: 0
@@ -2052,8 +2148,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65af832e11343524fbc882dec215f8b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lagEffect: 1
   prefab: {fileID: 114389335409064588, guid: 52b5537e9c00cc24b9e20c0d0b4c122f, type: 2}
   populationStartSize: 50
   populationMaxSize: 3500
   beaker: {fileID: 1312793469}
   startDiameter: 2
+  popSizePlot: {fileID: 1082321280}

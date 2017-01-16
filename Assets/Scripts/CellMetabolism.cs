@@ -113,7 +113,7 @@ public class CellMetabolism : MonoBehaviour {
 
     public void SetNutrientState(float value)
     {
-        nutrientState = value;
+        nutrientState = Mathf.Min(1, value);
     }
 
     void OnEnable()
@@ -164,7 +164,7 @@ public class CellMetabolism : MonoBehaviour {
 
     void Update()
     {
-        nutrientState = Mathf.Clamp01(nutrientState + Nutrient.GetCollidingNutrients(transform).Select(e => NutrientValue(e)).Sum() * metabolismFactor * Time.deltaTime);
+        nutrientState += Nutrient.GetCollidingNutrients(transform).Sum(e => NutrientValue(e)) * metabolismFactor * Time.deltaTime;
 
         UpdateSize();
 
@@ -194,6 +194,7 @@ public class CellMetabolism : MonoBehaviour {
     {
         //Add a new cell cycle to self
         age++;
+        nutrientState = 1f;
 
         if (_populationSize < culture.populationMaxSize)
         {

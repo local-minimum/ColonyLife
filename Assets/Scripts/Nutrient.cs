@@ -20,6 +20,21 @@ public class Nutrient : MonoBehaviour {
         }
     }
 
+    public static float GetCollidingNutritionalValue(Transform t, System.Func<Nutrient, float> func)
+    {
+        float r2 = PlanarPhysics.ScaleToRadiusSq(t);
+        Vector3 tPos = t.position;
+        float ret = 0;
+        for (int i = 0, l = nutrients.Count; i < l; i++)
+        {
+            if (PlanarPhysics.InsideSphereXZ(tPos, r2, nutrients[i].transform.position))
+            {
+                ret += func(nutrients[i]);
+            }
+        }
+        return ret;
+    }
+
     public static int Count {
         get
         {

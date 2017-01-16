@@ -7,6 +7,8 @@ public delegate void BatchTransfer(List<CellMetabolism> parentals);
 
 public class Culture : MonoBehaviour
 {
+    [SerializeField]
+    float lagEffect = 1f;
 
     public static event BatchTransfer OnNewBatch;
 
@@ -24,6 +26,9 @@ public class Culture : MonoBehaviour
     [SerializeField, Range(0, 3)]
     float startDiameter = 0.75f;
 
+    [SerializeField]
+    GraphSprite popSizePlot;
+
     void Start()
     {
         CellMetabolism template = null;
@@ -39,9 +44,15 @@ public class Culture : MonoBehaviour
             {
                 cell.CopyGenome(template, true);
             }
+            cell.SetNutrientState(Random.Range(-lagEffect, 1));
             parentals.Add(cell);
         }
 
+        if (popSizePlot)
+        {
+            popSizePlot.SetYLim(populationStartSize * 0.75f, populationMaxSize);
+
+        }
         if (OnNewBatch != null)
         {
             OnNewBatch(parentals);
@@ -92,7 +103,7 @@ public class Culture : MonoBehaviour
         foreach (CellMetabolism cell in parentals)
         {
             cell.ResetAge();
-            cell.SetNutrientState(0.5f);
+            cell.SetNutrientState(Random.Range(-lagEffect, 1));
             CreateFounder(cell);
             cell.enabled = true;
         }
