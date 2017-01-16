@@ -11,31 +11,73 @@ public class CellCountUI : MonoBehaviour {
     [SerializeField]
     Text popSizeDoubleTime;
 
-    [SerializeField]
-    float doublingTimeSampleFreq = 3f;
-
-    float sampleTime = 0f;
-
-    int prevSize;
-
     float log2 = Mathf.Log(2f);
 
-	// Update is called once per frame
-	void Update () {
+    void OnEnable()
+    {
+        Culture.OnNewBatch += Culture_OnNewBatch;
+    }
 
-        cellCount.text = CellMetabolism.populationSize.ToString();
+    void OnDisable()
+    {
+        Culture.OnNewBatch -= Culture_OnNewBatch;
+    }
 
-        if (Time.timeSinceLevelLoad > sampleTime + doublingTimeSampleFreq)
+    void OnDestroy()
+    {
+        Culture.OnNewBatch -= Culture_OnNewBatch;
+    }
+
+    bool recording = false;
+    List<float> times = new List<float>();
+    List<int> counts = new List<int>();
+
+    private void Culture_OnNewBatch(Culture culture)
+    {
+        recording = false;
+        times.Clear();
+        counts.Clear();
+        StartCoroutine(Recorder());
+    }
+
+    [SerializeField, Range(0, 1)]
+    float experimentTimeSampleFreq = 1 / 3f;
+    
+    IEnumerator<WaitForSeconds> Recorder() {
+
+        //Getting out of previous recordings and ensuring all data needed is up to date;
+        yield return new WaitForSeconds(0.1f);
+
+        recording = true;
+        int records = 0;
+        float nextTime = 0;
+        while (recording)
         {
-            int deltaSize = CellMetabolism.populationSize - prevSize;
-            float deltaTime = Time.timeSinceLevelLoad - sampleTime;
-            sampleTime = Time.timeSinceLevelLoad;
-            float sizeFactor = (prevSize + deltaSize) / (float)prevSize;
-            prevSize += deltaSize;
+            float time = GameTimeConverter.experimentTime;
+            if (time > nextTime)
+            {
+                times.Add(time);
+                nextTime = time + experimentTimeSampleFreq;
 
-            float doublingTime = deltaTime * log2 / Mathf.Log(sizeFactor);
+                int curCount = CellMetabolism.populationSize;
+                counts.Add(curCount);
 
-            popSizeDoubleTime.text = doublingTime.ToString("0.000");
+                records++;
+
+                cellCount.text = curCount.ToString();
+
+                if (records > 1)
+                {
+                    int prevSize = counts[records - 2];
+                    float deltaTime = time - times[records - 2];
+
+                    float sizeFactor = curCount / (float)prevSize;
+                    float doublingTime = deltaTime * log2 / Mathf.Log(sizeFactor);
+
+                    popSizeDoubleTime.text = doublingTime.ToString("0.000") + " h";
+                }
+            }
+            yield return new WaitForSeconds(0.02f);
         }
 	}
 }

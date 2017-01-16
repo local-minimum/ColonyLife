@@ -30,6 +30,9 @@ public class ManipulationRay : MonoBehaviour {
     [SerializeField]
     float rayComponentClamp = 5;
 
+    [SerializeField]
+    string cellMethod = "Burn";
+
     void Start () {
         manipulationRay = GetComponent<LineRenderer>();	
 	}
@@ -74,6 +77,8 @@ public class ManipulationRay : MonoBehaviour {
         }
     }
 
+    Vector3 sourcePos = Vector3.zero;
+
     void Update () {
         if (manipulationRay.enabled)
         {
@@ -82,7 +87,7 @@ public class ManipulationRay : MonoBehaviour {
             focusPoint += new Vector3(delta.x, 0, delta.y) * moveScale + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1, 1f)) * moveNoise;
             focusPoint = new Vector3(Mathf.Clamp(focusPoint.x, -rayComponentClamp, rayComponentClamp), focusPoint.y, Mathf.Clamp(focusPoint.z, -rayComponentClamp, rayComponentClamp));
 
-            Vector3 sourcePos = focusPoint - microscope.position;
+            sourcePos = focusPoint - microscope.position;
             sourcePos.y = 0;
             sourcePos = sourcePos.normalized;
             sourcePos = microscope.position + new Vector3(
@@ -93,16 +98,21 @@ public class ManipulationRay : MonoBehaviour {
             manipulationRay.SetPositions(new Vector3[] {sourcePos, focusPoint});
 
             Ray r = new Ray(sourcePos, (focusPoint - sourcePos).normalized);
-            RaycastHit[] hits = Physics.RaycastAll(r, rayFocusDepth, mask);
+            RaycastHit[] hits = Physics.RaycastAll(r, 2* rayFocusDepth, mask);
             for (int i=0; i<hits.Length; i++)
             {
                 CellMetabolism cell = hits[i].transform.GetComponent<CellMetabolism>();
                 if (cell)
                 {
-                    cell.Burn();
+                    cell.SendMessage(cellMethod, SendMessageOptions.RequireReceiver);
                 }
             }
         }
 	}
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawRay(new Ray(sourcePos, (focusPoint - sourcePos)));
+    }
 
 }

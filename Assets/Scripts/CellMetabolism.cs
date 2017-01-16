@@ -28,6 +28,11 @@ public class CellMetabolism : MonoBehaviour {
         }
     }
 
+    public static IEnumerable<bool[]> Genomes()
+    {
+        return _population.Select(e => e.genome);
+    }
+
     public static void WipePopulation()
     {
         for (int i=0, l=_population.Count; i< l; i++)
@@ -37,7 +42,7 @@ public class CellMetabolism : MonoBehaviour {
             Destroy(cell.gameObject);
         
         }
-        
+        _population.Clear();
         _populationSize = 0;
     }
 
@@ -208,12 +213,11 @@ public class CellMetabolism : MonoBehaviour {
     }
 
     int burnCount = 0;
-    int maxBurn = 20;
+    int maxBurn = 7;
 
     public void Burn()
     {
         burnCount++;
-
         if (burnCount > maxBurn)
         {
             Destroy(gameObject);

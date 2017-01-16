@@ -3,8 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+public delegate void BatchTransfer(Culture culture);
+
 public class Culture : MonoBehaviour
 {
+
+    public static event BatchTransfer OnNewBatch;
 
     [SerializeField]
     CellMetabolism prefab;
@@ -37,7 +41,11 @@ public class Culture : MonoBehaviour
             }
 
         }
-        
+
+        if (OnNewBatch != null)
+        {
+            OnNewBatch(this);
+        }
     }
 
     CellMetabolism CreateFounder()
@@ -88,5 +96,11 @@ public class Culture : MonoBehaviour
             CreateFounder(cell);
             cell.enabled = true;
         }
+
+        if (OnNewBatch != null)
+        {
+            OnNewBatch(this);
+        }
     }
+    
 }
