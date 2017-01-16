@@ -115,11 +115,11 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 30362673}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.05, y: 0.07, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1335750553}
-  m_RootOrder: 0
+  m_Father: {fileID: 160133638}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!120 &30362675
 LineRenderer:
@@ -224,7 +224,7 @@ LineRenderer:
     numCapVertices: 0
     alignment: 0
     textureMode: 0
-  m_UseWorldSpace: 0
+  m_UseWorldSpace: 1
 --- !u!114 &30362676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,6 +240,10 @@ MonoBehaviour:
   rayFocusDepth: 11
   moveNoise: 0.005
   moveScale: 0.002
+  sourceOffsetMagnitude: 4
+  sourcePositioningNoise: 0.03
+  microscope: {fileID: 1335750553}
+  rayComponentClamp: 5.25
 --- !u!1 &55580831
 GameObject:
   m_ObjectHideFlags: 0
@@ -342,6 +346,7 @@ Transform:
   - {fileID: 409570601}
   - {fileID: 2145626949}
   - {fileID: 2063636710}
+  - {fileID: 30362674}
   - {fileID: 1335750553}
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -840,10 +845,9 @@ Transform:
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 30362674}
+  m_Children: []
   m_Father: {fileID: 160133638}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &1367388594
 GameObject:

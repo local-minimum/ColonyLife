@@ -18,6 +18,18 @@ public class ManipulationRay : MonoBehaviour {
     [SerializeField]
     float moveScale = 0.4f;
 
+    [SerializeField]
+    float sourceOffsetMagnitude = 0.4f;
+
+    [SerializeField]
+    float sourcePositioningNoise = 0.1f;
+
+    [SerializeField]
+    Transform microscope;
+
+    [SerializeField]
+    float rayComponentClamp = 5;
+
     void Start () {
         manipulationRay = GetComponent<LineRenderer>();	
 	}
@@ -49,7 +61,7 @@ public class ManipulationRay : MonoBehaviour {
             {                
                 focusPoint = r.GetPoint(rayFocusDepth);
                 inputStartPos = Input.mousePosition;
-                manipulationRay.SetPosition(1, transform.InverseTransformPoint(focusPoint));
+                manipulationRay.SetPosition(1, focusPoint);
                 manipulationRay.enabled = true;
                 Cursor.visible = false;
                 mask = layers;
@@ -63,12 +75,24 @@ public class ManipulationRay : MonoBehaviour {
     }
 
     void Update () {
-		if (manipulationRay.enabled)
+        if (manipulationRay.enabled)
         {
+
             Vector2 delta = (Input.mousePosition - inputStartPos);
             focusPoint += new Vector3(delta.x, 0, delta.y) * moveScale + new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1, 1f)) * moveNoise;
-            manipulationRay.SetPosition(1, transform.InverseTransformPoint(focusPoint));
-            Ray r = new Ray(transform.position, (focusPoint - transform.position).normalized);
+            focusPoint = new Vector3(Mathf.Clamp(focusPoint.x, -rayComponentClamp, rayComponentClamp), focusPoint.y, Mathf.Clamp(focusPoint.z, -rayComponentClamp, rayComponentClamp));
+
+            Vector3 sourcePos = focusPoint - microscope.position;
+            sourcePos.y = 0;
+            sourcePos = sourcePos.normalized;
+            sourcePos = microscope.position + new Vector3(
+                sourcePos.x * (1 + Random.Range(-sourcePositioningNoise, sourcePositioningNoise)),
+                0,
+                sourcePos.z * (1 + Random.Range(-sourcePositioningNoise, sourcePositioningNoise))) * sourceOffsetMagnitude;
+
+            manipulationRay.SetPositions(new Vector3[] {sourcePos, focusPoint});
+
+            Ray r = new Ray(sourcePos, (focusPoint - sourcePos).normalized);
             RaycastHit[] hits = Physics.RaycastAll(r, rayFocusDepth, mask);
             for (int i=0; i<hits.Length; i++)
             {
@@ -80,4 +104,5 @@ public class ManipulationRay : MonoBehaviour {
             }
         }
 	}
+
 }
