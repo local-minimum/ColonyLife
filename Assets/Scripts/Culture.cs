@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public delegate void BatchTransfer(Culture culture);
+public delegate void BatchTransfer(List<CellMetabolism> parentals);
 
 public class Culture : MonoBehaviour
 {
@@ -27,7 +27,7 @@ public class Culture : MonoBehaviour
     void Start()
     {
         CellMetabolism template = null;
-
+        List<CellMetabolism> parentals = new List<CellMetabolism>();
         for (int i = 0; i < populationStartSize; i++)
         {
             CellMetabolism cell = CreateFounder();
@@ -39,12 +39,12 @@ public class Culture : MonoBehaviour
             {
                 cell.CopyGenome(template, true);
             }
-
+            parentals.Add(cell);
         }
 
         if (OnNewBatch != null)
         {
-            OnNewBatch(this);
+            OnNewBatch(parentals);
         }
     }
 
@@ -99,7 +99,7 @@ public class Culture : MonoBehaviour
 
         if (OnNewBatch != null)
         {
-            OnNewBatch(this);
+            OnNewBatch(parentals);
         }
     }
     

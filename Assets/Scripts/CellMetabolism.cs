@@ -19,11 +19,12 @@ public class CellMetabolism : MonoBehaviour {
 
     public static IEnumerable<CellMetabolism> SamplePopulation(int count)
     {
-        for (int i=0; i<count; i++)
+        for (int i = 0; i < count; i++)
         {
             CellMetabolism cell = _population[Random.Range(0, _population.Count)];
             cell.enabled = false;
             _population.Remove(cell);
+            _populationSize--;
             yield return cell;
         }
     }
@@ -35,15 +36,15 @@ public class CellMetabolism : MonoBehaviour {
 
     public static void WipePopulation()
     {
-        for (int i=0, l=_population.Count; i< l; i++)
+        for (int i = 0, l = _population.Count; i < l; i++)
         {
             CellMetabolism cell = _population[i];
             cell.enabled = false;
             Destroy(cell.gameObject);
-        
+
         }
-        _population.Clear();
-        _populationSize = 0;
+
+        //Destroy clears _population and decreases the popcount itself
     }
 
     [HideInInspector]
@@ -81,6 +82,13 @@ public class CellMetabolism : MonoBehaviour {
 
     bool[] genome;
 
+    public bool[] Genome {
+        get
+        {
+            return genome;
+        }
+    }
+
     void Start()
     {
         UpdateSize();
@@ -112,15 +120,18 @@ public class CellMetabolism : MonoBehaviour {
     {
         if (!_population.Contains(this))
         {
-            _populationSize += 1;
+            _populationSize++;
             _population.Add(this);
         }
     }
 
     void OnDestroy()
     {
-        _populationSize--;
-        _population.Remove(this);
+        if (_population.Contains(this))
+        {
+            _population.Remove(this);
+            _populationSize--;
+        }
     }
 
     public void CreateGenome()

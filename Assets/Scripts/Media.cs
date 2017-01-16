@@ -46,6 +46,5 @@ public class Media : MonoBehaviour {
             clone.transform.SetParent(transform);
             clone.transform.position = beaker.TransformPoint(new Vector3(Random.Range(-1, 1), 0, Random.Range(-1, 1)));
         }
-        Debug.Log(Nutrient.Count);
     }	
 }

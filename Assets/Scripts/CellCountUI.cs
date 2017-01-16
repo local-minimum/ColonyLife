@@ -32,25 +32,29 @@ public class CellCountUI : MonoBehaviour {
     List<float> times = new List<float>();
     List<int> counts = new List<int>();
 
-    private void Culture_OnNewBatch(Culture culture)
+    private void Culture_OnNewBatch(List<CellMetabolism> parentals)
     {
         recording = false;
-        times.Clear();
-        counts.Clear();
-        StartCoroutine(Recorder());
+        StartCoroutine(Recorder(parentals.Count));
     }
 
     [SerializeField, Range(0, 1)]
     float experimentTimeSampleFreq = 1 / 3f;
     
-    IEnumerator<WaitForSeconds> Recorder() {
+    IEnumerator<WaitForSeconds> Recorder(int curCount) {
 
         //Getting out of previous recordings and ensuring all data needed is up to date;
         yield return new WaitForSeconds(0.1f);
-
-        recording = true;
+        times.Clear();
+        counts.Clear();
         int records = 0;
-        float nextTime = 0;
+        float nextTime = 0 + experimentTimeSampleFreq;
+        times.Add(0);
+        counts.Add(curCount);
+        recording = true;
+
+        bool updateUI = true;
+
         while (recording)
         {
             float time = GameTimeConverter.experimentTime;
@@ -59,10 +63,15 @@ public class CellCountUI : MonoBehaviour {
                 times.Add(time);
                 nextTime = time + experimentTimeSampleFreq;
 
-                int curCount = CellMetabolism.populationSize;
+                curCount = CellMetabolism.populationSize;
                 counts.Add(curCount);
 
                 records++;
+                updateUI = true;
+            }
+            if (updateUI) {
+
+                updateUI = false;
 
                 cellCount.text = curCount.ToString();
 

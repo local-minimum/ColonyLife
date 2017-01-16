@@ -34,10 +34,9 @@ public class GenomeMap : MonoBehaviour {
     [SerializeField]
     Color falseColor;
 
-    private void Culture_OnNewBatch(Culture culture)
+    private void Culture_OnNewBatch(List<CellMetabolism> parentals)
     {
-        bool[][] genomes = CellMetabolism.Genomes().ToArray();
-
+        bool[][] genomes = parentals.Select(e => e.Genome).ToArray();
         int width = genomes[0].Length;
         int height = genomes.Length;
 
@@ -48,9 +47,10 @@ public class GenomeMap : MonoBehaviour {
         {
             for (int y=0; y<height; y++)
             {
-                tex.SetPixel(x, y, genomes[y][x] ? trueColor : falseColor);
+                tex.SetPixel(x, y, genomes[y][x] ? trueColor : falseColor);                
             }
         }
+
         tex.Apply();
         genomeHistory.Add(currentFounders);
 
@@ -60,5 +60,26 @@ public class GenomeMap : MonoBehaviour {
             targetImage.color = Color.white;
             targetImage.sprite = currentFounders;
         }
+    }
+
+    /* Need multiple aligmnents and sorting getting them in orderish
+        int dist = GenomeDistance(genomes[a], genome[b]);
+        
+        List<int> genomeIndices = Enumerable.Range(0, height).ToList();
+        
+
+    */
+
+    int GenomeDistance(bool[] A, bool[] B)
+    {
+        int diffs = 0;
+        for (int i=0; i<A.Length; i++)
+        {
+            if (A[i] != B[i])
+            {
+                diffs++;
+            }
+        }
+        return diffs;
     }
 }

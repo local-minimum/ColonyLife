@@ -32,7 +32,7 @@ public class GameTimeConverter : MonoBehaviour {
         Culture.OnNewBatch -= Culture_OnNewBatch;
     }
 
-    private void Culture_OnNewBatch(Culture culture)
+    private void Culture_OnNewBatch(List<CellMetabolism> parentals)
     {
         startGameTime = Time.timeSinceLevelLoad;
     }
