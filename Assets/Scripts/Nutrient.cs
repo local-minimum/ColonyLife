@@ -46,6 +46,9 @@ public class Nutrient : MonoBehaviour {
     [SerializeField]
     float nutrientDetrimentalFactor = 1f;
 
+    [SerializeField, Range(0, .5f)]
+    float bounceNoise = 0.05f;
+
     public static bool[] CreateNutrientGenome(int nutrientSize)
     {
         bool[] nutrientGenome = new bool[nutrientSize];
@@ -112,18 +115,18 @@ public class Nutrient : MonoBehaviour {
 
         if (localPos.x > 1f)
         {
-            direction.x = -Mathf.Abs(direction.x);
+            direction = new Vector3(-Mathf.Abs(direction.x) * (1 + Random.Range(-bounceNoise, bounceNoise)), 0, direction.z).normalized;
         } else if (localPos.x < -1f)
         {
-            direction.x = Mathf.Abs(direction.x);
+            direction = new Vector3(Mathf.Abs(direction.x) * (1 + Random.Range(-bounceNoise, bounceNoise)), 0, direction.z).normalized;
         }
 
         if (localPos.z > 1f)
         {
-            direction.z = -Mathf.Abs(direction.z);
+            direction = new Vector3(direction.x, 0 , -Mathf.Abs(direction.z) * (1 + Random.Range(-bounceNoise, bounceNoise))).normalized;
         } else if (localPos.z < -1f)
         {
-            direction.z = Mathf.Abs(direction.z);
+            direction = new Vector3(direction.x, 0, Mathf.Abs(direction.z) * (1 + Random.Range(-bounceNoise, bounceNoise))).normalized;
         }
     }
 
