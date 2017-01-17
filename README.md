@@ -18,6 +18,7 @@ Gamefication of my PhD studying yeast growth
 
 * Have phase between transfers where you see two pages of book
 * Make nutrient selection stronger
+* Nutrient either decay with number of times eaten or with time/population size
 
 ## Style
 
