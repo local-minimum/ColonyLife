@@ -34,15 +34,18 @@ public class GameTimeConverter : MonoBehaviour {
 
     private void Culture_OnNewBatch(List<CellMetabolism> parentals)
     {
+        started = true;
         startGameTime = Time.timeSinceLevelLoad;
     }
+
+    bool started = false;
 
     [SerializeField]
     Text clockUI;
 
     void Update()
     {
-        if (clockUI)
+        if (started && clockUI)
         {
             clockUI.text = experimentTime.ToString("0.00") + " h";
         }

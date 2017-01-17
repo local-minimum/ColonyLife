@@ -33,59 +33,45 @@ public class Culture : MonoBehaviour
     {
         CellMetabolism template = null;
         List<CellMetabolism> parentals = new List<CellMetabolism>();
-        for (int i = 0; i < populationStartSize; i++)
-        {
-            CellMetabolism cell = CreateFounder();
-            if (template == null)
-            {
-                template = cell;
-                cell.CreateGenome();
-            } else
-            {
-                cell.CopyGenome(template, true);
-            }
-            cell.SetNutrientState(Random.Range(-lagEffect, 1));
-            parentals.Add(cell);
-        }
 
         if (popSizePlot)
         {
             popSizePlot.SetYLim(populationStartSize * 0.75f, populationMaxSize);
 
         }
-        if (OnNewBatch != null)
-        {
-            OnNewBatch(parentals);
-        }
+
+        StartCoroutine(CreatePopulation());
     }
 
-    enum PopulationStatus { UnderConstruction, Ready, Running};
+    enum PopulationStatus { UnderConstruction, ReadyFirstPop, Running};
     PopulationStatus populationStatus = PopulationStatus.UnderConstruction;
 
     IEnumerator<WaitForSeconds> CreatePopulation() {
         populationStatus = PopulationStatus.UnderConstruction;
         for (int i=0; i<populationMaxSize; i++)
         {
-            CreateFounder().gameObject.SetActive(false);
-            if (i % 50 == 0)
+            CreateFounder();
+            if (i % 10 == 0)
             {
                 yield return new WaitForSeconds(0.0016f);
             }
         }
-        populationStatus = PopulationStatus.Ready;
+        populationStatus = PopulationStatus.ReadyFirstPop;
     }
 
     CellMetabolism CreateFounder()
     {
         CellMetabolism cell = Instantiate(prefab);
         cell.transform.SetParent(transform);
-        return CreateFounder(cell);
+        cell.culture = this;
+        cell.SetToInactive();
+        cell.gameObject.SetActive(false);
+        return cell;
     }
 
     CellMetabolism CreateFounder(CellMetabolism cell)
     {        
-        cell.transform.position = beaker.TransformPoint(new Vector3(Random.Range(-1f, 1f), Random.Range(0f, 0.2f), Random.Range(-1f, 1f)).normalized * Random.Range(1f, startDiameter));
-        cell.culture = this;
+        cell.transform.position = beaker.TransformPoint(new Vector3(Random.Range(-1f, 1f), Random.Range(0f, 0.2f), Random.Range(-1f, 1f)).normalized * Random.Range(1f, startDiameter));        
         return cell;
     }
 
@@ -106,7 +92,7 @@ public class Culture : MonoBehaviour
 
     private void CultureManipulator_OnManipulation(ManipulationMode mode, ManipulationEventType modeType, Ray r, LayerMask layers)
     {
-        if (mode == ManipulationMode.BatchTransfer && modeType == ManipulationEventType.Instant)
+        if ((populationStatus == PopulationStatus.ReadyFirstPop || populationStatus == PopulationStatus.Running) && mode == ManipulationMode.BatchTransfer && modeType == ManipulationEventType.Instant)
         {
             List<CellMetabolism> parentals = CellMetabolism.SamplePopulation(populationStartSize).ToList();
             CellMetabolism.WipePopulation();
@@ -122,6 +108,8 @@ public class Culture : MonoBehaviour
             cell.SetNutrientState(Random.Range(-lagEffect, 1));
             CreateFounder(cell);
             cell.enabled = true;
+            CellMetabolism.AddToPopulation(cell);
+            cell.gameObject.SetActive(true);
         }
 
         if (OnNewBatch != null)
@@ -129,5 +117,24 @@ public class Culture : MonoBehaviour
             OnNewBatch(parentals);
         }
     }
-    
+
+    void Update()
+    {
+        switch (populationStatus)
+        {
+            case PopulationStatus.ReadyFirstPop:
+                List<CellMetabolism> founders = CellMetabolism.GetInactive(populationStartSize);
+                CellMetabolism template = founders[0];
+                template.CreateGenome();
+                for (int i=1; i<populationStartSize; i++)
+                {
+                    founders[i].CopyGenome(template, true);
+                    
+                }
+                SetStartCulture(founders);
+                populationStatus = PopulationStatus.Running;
+                break;
+                
+        }
+    }
 }
