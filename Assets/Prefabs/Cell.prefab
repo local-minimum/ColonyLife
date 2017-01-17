@@ -20,10 +20,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4057891578012212}
   - component: {fileID: 33082510288896584}
-  - component: {fileID: 135465807739285690}
   - component: {fileID: 23659178179147340}
   - component: {fileID: 114389335409064588}
   - component: {fileID: 54286468231171580}
+  - component: {fileID: 135920186755773216}
   m_Layer: 8
   m_Name: Cell
   m_TagString: Untagged
@@ -116,9 +116,9 @@ MonoBehaviour:
   nutrientState: 0.5
   viewSizeMax: 0.5
   viewSizeMin: 0.25
-  metabolismFactor: 0.005
+  metabolismFactor: 0.015
   genomeSize: 64
---- !u!135 &135465807739285690
+--- !u!135 &135920186755773216
 SphereCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -128,5 +128,5 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.45
   m_Center: {x: 0, y: 0, z: 0}

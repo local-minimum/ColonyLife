@@ -59,6 +59,22 @@ public class Culture : MonoBehaviour
         }
     }
 
+    enum PopulationStatus { UnderConstruction, Ready, Running};
+    PopulationStatus populationStatus = PopulationStatus.UnderConstruction;
+
+    IEnumerator<WaitForSeconds> CreatePopulation() {
+        populationStatus = PopulationStatus.UnderConstruction;
+        for (int i=0; i<populationMaxSize; i++)
+        {
+            CreateFounder().gameObject.SetActive(false);
+            if (i % 50 == 0)
+            {
+                yield return new WaitForSeconds(0.0016f);
+            }
+        }
+        populationStatus = PopulationStatus.Ready;
+    }
+
     CellMetabolism CreateFounder()
     {
         CellMetabolism cell = Instantiate(prefab);

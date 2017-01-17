@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Media : MonoBehaviour {
+    public static int NutrientTypes;
 
     [SerializeField]
     Nutrient prefab;
@@ -25,12 +26,13 @@ public class Media : MonoBehaviour {
 	void Start () {
 		for (int i=0; i<nutrientSizes.Length; i++)
         {
-            CreateNutrient(nutrientSizes[i], nutrientAmmounts[i], nutrientPositive[i], nutrientDetrimental[i]);
+            CreateNutrient(i, nutrientSizes[i], nutrientAmmounts[i], nutrientPositive[i], nutrientDetrimental[i]);
         }
+        NutrientTypes = nutrientSizes.Length;
 	}
 
 
-    void CreateNutrient(int size, int count, float positive, float detrimental)
+    void CreateNutrient(int nutrientIndex, int size, int count, float positive, float detrimental)
     {
         Nutrient template = Instantiate(prefab);
         bool[] nutrientGenome = Nutrient.CreateNutrientGenome(size);
@@ -39,6 +41,7 @@ public class Media : MonoBehaviour {
         template.transform.SetParent(transform);
         template.transform.position = beaker.TransformPoint(new Vector3(Random.Range(-1, 1), 0, Random.Range(-1, 1)));
         template.SetEffects(positive, detrimental);
+        template.nutrientTypeIndex = nutrientIndex;
 
         for (int i = 1; i < count; i++)
         {

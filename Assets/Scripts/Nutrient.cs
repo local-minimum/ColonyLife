@@ -5,6 +5,7 @@ using UnityEngine;
 public class Nutrient : MonoBehaviour {
     
     static List<Nutrient> nutrients = new List<Nutrient>();
+    Vector3 transformPos;
 
     public static IEnumerable<Nutrient> GetCollidingNutrients(Transform t)
     {
@@ -22,12 +23,12 @@ public class Nutrient : MonoBehaviour {
 
     public static float GetCollidingNutritionalValue(Transform t, System.Func<Nutrient, float> func)
     {
-        float r2 = PlanarPhysics.ScaleToRadiusSq(t);
+        //float r2 = PlanarPhysics.ScaleToRadiusSq(t);
         Vector3 tPos = t.position;
         float ret = 0;
         for (int i = 0, l = nutrients.Count; i < l; i++)
         {
-            if (PlanarPhysics.InsideSphereXZ(tPos, r2, nutrients[i].transform.position))
+            if (PlanarPhysics.InsideBlockXZ(tPos, 0.25f, nutrients[i].transformPos))
             {
                 ret += func(nutrients[i]);
             }
@@ -60,6 +61,9 @@ public class Nutrient : MonoBehaviour {
 
     [SerializeField]
     float nutrientDetrimentalFactor = 1f;
+
+    [HideInInspector]
+    public int nutrientTypeIndex = -1;
 
     [SerializeField, Range(0, .5f)]
     float bounceNoise = 0.05f;
@@ -112,9 +116,9 @@ public class Nutrient : MonoBehaviour {
 
     void Update()
     {
-        transform.position += direction * speed * Time.deltaTime;
-
+        transform.position += direction * speed * Time.deltaTime;        
         Bounce(beakerLocalPosition);
+        transformPos = transform.position;
     }
 
     Vector3 beakerLocalPosition

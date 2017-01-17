@@ -91,14 +91,33 @@ public class CellMetabolism : MonoBehaviour {
 
     void Start()
     {
-        UpdateSize();
+        if (hasCalculatedNutrientValue == null)
+        {
+            CreateNutrientLookup();
+        }
+        UpdateSize();        
+    }
+
+    void CreateNutrientLookup()
+    {
+        hasCalculatedNutrientValue = new bool[Media.NutrientTypes];
+        nutrientValue = new float[Media.NutrientTypes];
+        
     }
 
     public void CopyGenome(CellMetabolism other, bool mitosisMutate)
     {
         genomeSize = other.genomeSize;
-        genome = new bool[genomeSize];
+        if (genome == null || genome.Length != genomeSize)
+        {
+            genome = new bool[genomeSize];
+        }
         other.genome.CopyTo(genome, 0);
+
+        if (hasCalculatedNutrientValue == null)
+        {
+            CreateNutrientLookup();
+        }
 
         if (mitosisMutate)
         {
@@ -151,21 +170,39 @@ public class CellMetabolism : MonoBehaviour {
             int pos = Random.Range(0, genomeSize);
             genome[pos] = !genome[pos];
         }
-        nutrientLookup.Clear();
+        ClearNutrientLookup();
     }
 
     public void Mutate()
     {
         int pos = Random.Range(0, genomeSize);
         genome[pos] = !genome[pos];
-        nutrientLookup.Clear();
+        ClearNutrientLookup();
         mutationEvents++;
     }
 
+    void ClearNutrientLookup()
+    {        
+        for (int i=0, l=Media.NutrientTypes; i< l; i++)
+        {
+            hasCalculatedNutrientValue[i] = false;
+        }
+    }       
+
+    float currentDeltaNutrition = 0f;
+    int frame = 0;
+
     void Update()
     {
-        nutrientState += Nutrient.GetCollidingNutrients(transform).Sum(e => NutrientValue(e)) * metabolismFactor * Time.deltaTime;
-
+        if (frame == 7)
+        {
+            currentDeltaNutrition = Nutrient.GetCollidingNutritionalValue(transform, NutrientValue) * metabolismFactor;
+            frame = 0;
+        } else
+        {
+            frame++;
+        }
+        nutrientState += currentDeltaNutrition * Time.deltaTime;
         UpdateSize();
 
         if (nutrientState >= 1f)
@@ -179,15 +216,20 @@ public class CellMetabolism : MonoBehaviour {
         transform.localScale = Vector3.one * Mathf.Lerp(viewSizeMin, viewSizeMax, nutrientState);
     }
 
-    Dictionary<bool[], float> nutrientLookup = new Dictionary<bool[], float>();
+    bool[] hasCalculatedNutrientValue;
+    float[] nutrientValue;
 
     float NutrientValue(Nutrient nutrient)
     {
-        if (!nutrientLookup.Keys.Contains(nutrient.nutrientGenome)) {
-            nutrientLookup[nutrient.nutrientGenome] = nutrient.CalculateNutrientEffect(genomeSize, genome);
+        if (hasCalculatedNutrientValue[nutrient.nutrientTypeIndex])
+        {
+            return nutrientValue[nutrient.nutrientTypeIndex];
+        } else
+        {
+            nutrientValue[nutrient.nutrientTypeIndex] = nutrient.CalculateNutrientEffect(genomeSize, genome);
+            hasCalculatedNutrientValue[nutrient.nutrientTypeIndex] = true;
+            return nutrientValue[nutrient.nutrientTypeIndex];
         }
-
-        return nutrientLookup[nutrient.nutrientGenome];
     }
 
     void Clone()

@@ -20,6 +20,11 @@ public static class PlanarPhysics {
 
     public static bool InsideSphereXZ(Vector3 sphere, float r2, Vector3 position)
     {        
-        return (Mathf.Pow(position.x - sphere.x, 2) + Mathf.Pow(position.z - sphere.z, 2)) < r2;
+        return (Mathf.Pow(position.x - sphere.x, 2f) + Mathf.Pow(position.z - sphere.z, 2f)) < r2;
+    }
+
+    public static bool InsideBlockXZ(Vector3 taxi, float blockSize, Vector3 block)
+    {
+        return Mathf.Abs(taxi.x - block.x) < blockSize && Mathf.Abs(taxi.z - block.z) < blockSize;
     }
 }
