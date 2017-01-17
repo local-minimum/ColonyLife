@@ -1363,9 +1363,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   modeSprites:
-  - {fileID: 21300000, guid: 3768598d8c698a6448710e77a1f56335, type: 3}
-  - {fileID: 21300000, guid: f9808991d336c324e9f0da8fdbcb8411, type: 3}
-  - {fileID: 21300000, guid: d8de72a164f13a54c82e65090d77cdae, type: 3}
+  - {fileID: 21300000, guid: ffede10cbab39ec428736abe5a2c4956, type: 3}
+  - {fileID: 21300000, guid: c61bdb73f3879944090f4d79b1a2c6b0, type: 3}
+  - {fileID: 21300000, guid: dab51e05a1fde9f46b4b3a5dec1f18c4, type: 3}
   swapTrigger: SelectNew
 --- !u!1 &1462353038
 GameObject:
