@@ -116,7 +116,7 @@ MonoBehaviour:
   nutrientState: 0.5
   viewSizeMax: 0.5
   viewSizeMin: 0.25
-  metabolismFactor: 0.015
+  metabolismFactor: 0.002
   genomeSize: 64
 --- !u!135 &135920186755773216
 SphereCollider:

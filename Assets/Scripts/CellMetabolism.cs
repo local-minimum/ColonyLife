@@ -56,7 +56,9 @@ public class CellMetabolism : MonoBehaviour {
         for (int i = 0, l = _population.Count; i < l; i++)
         {
             CellMetabolism cell = _population[i];
-            _InactivePopulation.Add(cell);            
+            _InactivePopulation.Add(cell);
+            cell.enabled = false;
+            cell.gameObject.SetActive(false);
         }
         _population.Clear();
         populationSize = 0;
@@ -114,6 +116,8 @@ public class CellMetabolism : MonoBehaviour {
         if (!_InactivePopulation.Contains(this))
         {
             _InactivePopulation.Add(this);
+            enabled = false;
+            gameObject.SetActive(false);
         }
     }
 
@@ -316,9 +320,7 @@ public class CellMetabolism : MonoBehaviour {
         burnCount++;
         if (burnCount > maxBurn)
         {
-            _population.Remove(this);
-            _InactivePopulation.Add(this);
-            gameObject.SetActive(false);
+            SetToInactive();            
         }
     }
 }
