@@ -1,7 +1,7 @@
 # ColonyLife
 Gamefication of my PhD studying yeast growth
 
-[Current visual status](http://pic.twitter.com/aq0ONaFeCX)
+![Current visual status](https://raw.githubusercontent.com/local-minimum/ColonyLife/master/labbook.png)
 
 # Todo
 
