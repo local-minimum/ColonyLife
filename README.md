@@ -7,21 +7,17 @@ Gamefication of my PhD studying yeast growth
 
 ## Performance
 
-* Make nutrient collision a Coroutine and update the current state at lower intervals
- * Make nutrient have type-index and lookup be on a bool array if calculated and corresponding float array for value
 * Simplify physics
- * Lock all rotations
- * Test using box colliders
  * Write on Rigidbody?
 
 ## Biology
 
-* Have phase between transfers where you see two pages of book
 * Make nutrient selection stronger
 * Nutrient either decay with number of times eaten or with time/population size
 
 ## Style
 
+* Have phase between transfers where you see two pages of book
 * Make lab notebook feel
  * One page when simulating, two between batches 
 * Make microscope be on right side
