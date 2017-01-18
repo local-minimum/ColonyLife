@@ -8,7 +8,7 @@ Gamefication of my PhD studying yeast growth
 ## Performance
 
 * Simplify physics
- * Write on Rigidbody?
+ * Write own Rigidbody?
 
 ## Biology
 
