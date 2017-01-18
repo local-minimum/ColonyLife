@@ -12,7 +12,6 @@ Gamefication of my PhD studying yeast growth
 
 ## Biology
 
-* Report the cycle of current experiment
 * Make nutrient selection stronger
 * Nutrient either decay with number of times eaten or with time/population size
 

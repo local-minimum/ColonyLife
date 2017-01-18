@@ -15,6 +15,9 @@ public class CellCountUI : MonoBehaviour {
     [SerializeField]
     GraphSprite popSizeGraph;
 
+    [SerializeField]
+    Text cycle;
+
     float log2 = Mathf.Log(2f);
 
     void OnEnable()
@@ -38,6 +41,9 @@ public class CellCountUI : MonoBehaviour {
 
     private void Culture_OnNewBatch(List<CellMetabolism> parentals)
     {
+        cycles++;
+        cycle.text = cycles.ToString();
+
         recording = false;
         StartCoroutine(Recorder(parentals.Count));
     }
@@ -47,6 +53,8 @@ public class CellCountUI : MonoBehaviour {
 
     [SerializeField]
     int gtTimeDelta = 5;
+
+    int cycles = 0;
 
     IEnumerator<WaitForSeconds> Recorder(int curCount) {
 
