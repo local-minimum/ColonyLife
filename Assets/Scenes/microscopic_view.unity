@@ -255,8 +255,8 @@ LineRenderer:
         outSlope: 0
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.99458
-        value: 0.5
+        time: 0.99729
+        value: 0.10169491
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -324,7 +324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeMode: 2
-  rayFocusDepth: 11
+  rayFocusDepth: 10.25
   moveNoise: 0.005
   moveScale: 0.002
   sourceOffsetMagnitude: 4
@@ -2089,7 +2089,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activeMode: 1
-  rayFocusDepth: 11
+  rayFocusDepth: 10.25
   moveNoise: 0.005
   moveScale: 0.002
   sourceOffsetMagnitude: 4
@@ -2144,8 +2144,8 @@ LineRenderer:
         outSlope: 0
         tangentMode: 0
       - serializedVersion: 2
-        time: 0.99458
-        value: 0.5
+        time: 0.99729
+        value: 0.10169491
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -2645,12 +2645,16 @@ MonoBehaviour:
   nutrientAmmounts: 050000002800000064000000
   nutrientPositive:
   - 0
+  - 5
   - 1
-  - 0.5
   nutrientDetrimental:
   - 2
   - 0.1
   - 0.5
+  nutrientCapacity:
+  - 0
+  - 35000
+  - 7000
   beaker: {fileID: 1312793469}
 --- !u!1 &2080916762
 GameObject:

@@ -172,7 +172,7 @@
      inkscape:cx="331.98043"
      inkscape:cy="1041.6687"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="layer6"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
@@ -290,6 +290,14 @@
        sodipodi:nodetypes="cc"
        inkscape:export-xdpi="282.08112"
        inkscape:export-ydpi="282.08112" />
+    <path
+       inkscape:export-ydpi="282.08112"
+       inkscape:export-xdpi="282.08112"
+       sodipodi:nodetypes="ccccccccccc"
+       inkscape:connector-curvature="0"
+       id="path4203"
+       d="m 442.14285,137.3622 c 9.7919,3.06104 21.71402,4.49907 41.42857,0 l -14.35713,-31.69642 0,-17.410718 5.53571,0 0,-4.642858 c -7.86305,1.464578 -15.98226,1.392187 -24.32143,0 l 0,4.642858 5.71429,0 0,17.410718 z"
+       style="fill:#f9f9f9;fill-opacity:0.90196078;fill-rule:evenodd;stroke:#f4f4f4;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   </g>
   <g
      inkscape:groupmode="layer"

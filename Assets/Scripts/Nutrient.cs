@@ -62,6 +62,11 @@ public class Nutrient : MonoBehaviour {
     [SerializeField]
     float nutrientDetrimentalFactor = 1f;
 
+    //10 seconds of full pop size
+    public float nutrientDepletionCapacity = 3500 * 10;
+
+    float nutrientUsage = 0;
+
     [HideInInspector]
     public int nutrientTypeIndex = -1;
 
@@ -119,6 +124,7 @@ public class Nutrient : MonoBehaviour {
         transform.position += direction * speed * Time.deltaTime;        
         Bounce(beakerLocalPosition);
         transformPos = transform.position;
+        nutrientUsage += Time.deltaTime * CellMetabolism.populationSize;
     }
 
     Vector3 beakerLocalPosition
@@ -181,8 +187,8 @@ public class Nutrient : MonoBehaviour {
             Debug.Log("Optimum Reached");
         }
 
-        maxGain *= nutrientPositiveFactor;
-        maxLoss *= nutrientDetrimentalFactor;
+        maxGain = Mathf.Pow(maxGain / nutrientSize, 2) * nutrientPositiveFactor * (Mathf.Max(0, nutrientDepletionCapacity - nutrientUsage) / nutrientDepletionCapacity);
+        maxLoss = Mathf.Pow(maxLoss / nutrientSize, 2) * nutrientDetrimentalFactor;
 
         if (maxGain >= maxLoss)
         {

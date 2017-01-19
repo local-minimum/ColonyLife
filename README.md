@@ -5,10 +5,6 @@ Gamefication of my PhD studying yeast growth
 
 # Todo
 
-## Biology
-
-- [ ] Make nutrient selection stronger
-- [ ] Nutrient either decay with number of times eaten or with time/population size
 
 ## Style
 

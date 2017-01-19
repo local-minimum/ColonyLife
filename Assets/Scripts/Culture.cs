@@ -31,8 +31,6 @@ public class Culture : MonoBehaviour
 
     void Start()
     {
-        CellMetabolism template = null;
-        List<CellMetabolism> parentals = new List<CellMetabolism>();
 
         if (popSizePlot)
         {
