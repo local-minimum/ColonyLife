@@ -23,6 +23,9 @@ public class Culture : MonoBehaviour
     [SerializeField]
     Transform beaker;
 
+    [SerializeField]
+    float maxCycleDuration = 72;
+
     [SerializeField, Range(0, 3)]
     float startDiameter = 0.75f;
 
@@ -132,6 +135,12 @@ public class Culture : MonoBehaviour
                 }
                 SetStartCulture(founders);
                 populationStatus = PopulationStatus.Running;
+                break;
+            case PopulationStatus.Running:
+                if (GameTimeConverter.experimentTime > maxCycleDuration)
+                {
+                    CultureManipulator_OnManipulation(ManipulationMode.BatchTransfer, ManipulationEventType.Instant, new Ray(), 0);
+                }
                 break;
                 
         }
