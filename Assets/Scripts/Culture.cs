@@ -48,7 +48,7 @@ public class Culture : MonoBehaviour
         populationStatus = PopulationStatus.UnderConstruction;
         for (int i=0; i<populationMaxSize; i++)
         {
-            CreateFounder();
+            CreateFounder(i);
             if (i % 10 == 0)
             {
                 yield return new WaitForSeconds(0.0016f);
@@ -57,11 +57,12 @@ public class Culture : MonoBehaviour
         populationStatus = PopulationStatus.ReadyFirstPop;
     }
 
-    CellMetabolism CreateFounder()
+    CellMetabolism CreateFounder(int index)
     {
         CellMetabolism cell = Instantiate(prefab);
         cell.transform.SetParent(transform);
         cell.culture = this;
+        cell.name = "Cell " + index;
         cell.SetToInactive();
         cell.gameObject.SetActive(false);
         return cell;

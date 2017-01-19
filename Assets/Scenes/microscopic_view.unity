@@ -214,7 +214,7 @@ LineRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 30362673}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_MotionVectors: 0
@@ -1386,7 +1386,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.86764705, g: 0.031898767, b: 0.031898767, a: 1}
+  m_Color: {r: 0.86764705, g: 0.031898767, b: 0.031898767, a: 0.728}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2103,7 +2103,7 @@ LineRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1804469639}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_MotionVectors: 0
@@ -2645,16 +2645,16 @@ MonoBehaviour:
   nutrientAmmounts: 050000002800000064000000
   nutrientPositive:
   - 0
-  - 5
   - 1
+  - 3
   nutrientDetrimental:
-  - 2
+  - 20
   - 0.1
   - 0.5
   nutrientCapacity:
   - 0
-  - 35000
-  - 7000
+  - 100000
+  - 30000
   beaker: {fileID: 1312793469}
 --- !u!1 &2080916762
 GameObject:

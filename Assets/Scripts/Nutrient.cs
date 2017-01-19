@@ -65,7 +65,7 @@ public class Nutrient : MonoBehaviour {
     //10 seconds of full pop size
     public float nutrientDepletionCapacity = 3500 * 10;
 
-    float nutrientUsage = 0;
+    public float nutrientUsage = 0;
 
     [HideInInspector]
     public int nutrientTypeIndex = -1;
@@ -190,7 +190,7 @@ public class Nutrient : MonoBehaviour {
         maxGain = Mathf.Pow(maxGain / nutrientSize, 2) * nutrientPositiveFactor * (Mathf.Max(0, nutrientDepletionCapacity - nutrientUsage) / nutrientDepletionCapacity);
         maxLoss = Mathf.Pow(maxLoss / nutrientSize, 2) * nutrientDetrimentalFactor;
 
-        if (maxGain >= maxLoss)
+        if (maxGain > maxLoss)
         {
             return maxGain;
         }

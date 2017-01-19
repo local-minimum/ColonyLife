@@ -26,6 +26,8 @@ public class Media : MonoBehaviour {
     [SerializeField]
     Transform beaker;
 
+    List<Nutrient> media = new List<Nutrient>();
+
 	void Start () {
 		for (int i=0; i<nutrientSizes.Length; i++)
         {
@@ -46,12 +48,37 @@ public class Media : MonoBehaviour {
         template.SetEffects(positive, detrimental);
         template.nutrientTypeIndex = nutrientIndex;
         template.nutrientDepletionCapacity = capacity;
-
+        template.name = "Nutrient Type " + nutrientIndex;
+        media.Add(template);
         for (int i = 1; i < count; i++)
         {
             Nutrient clone = Instantiate(template);
             clone.transform.SetParent(transform);
             clone.transform.position = beaker.TransformPoint(new Vector3(Random.Range(-1, 1), 0, Random.Range(-1, 1)));
+            media.Add(clone);
         }
-    }	
+    }
+
+    void OnEnable()
+    {
+        Culture.OnNewBatch += Culture_OnNewBatch;
+    }
+
+    void OnDisable()
+    {
+        Culture.OnNewBatch -= Culture_OnNewBatch;
+    }
+
+    void OnDestroy()
+    {
+        Culture.OnNewBatch -= Culture_OnNewBatch;
+    }
+
+    private void Culture_OnNewBatch(List<CellMetabolism> parentals)
+    {
+        for (int i=0, l=media.Count; i< l; i++)
+        {
+            media[i].nutrientUsage = 0;
+        }
+    }
 }

@@ -173,11 +173,13 @@ public class CellMetabolism : MonoBehaviour {
     public void ResetAge()
     {
         age = 0;
+        ClearNutrientLookup();
     }
 
     public void SetNutrientState(float value)
     {
         nutrientState = Mathf.Min(1, value);
+        requireNutrientLookup = true;
     }
 
     void OnDestroy()
@@ -230,13 +232,16 @@ public class CellMetabolism : MonoBehaviour {
 
     float currentDeltaNutrition = 0f;
     int frame = 0;
+    bool requireNutrientLookup = false;
 
     void Update()
     {
-        if (frame == 7)
+        if (requireNutrientLookup || frame == 7)
         {
             currentDeltaNutrition = Nutrient.GetCollidingNutritionalValue(transform, NutrientValue) * metabolismFactor;
             frame = 0;
+            requireNutrientLookup = false;
+
         } else
         {
             frame++;
@@ -260,6 +265,8 @@ public class CellMetabolism : MonoBehaviour {
 
     float NutrientValue(Nutrient nutrient)
     {
+        return nutrient.CalculateNutrientEffect(genomeSize, genome);
+        /*
         if (hasCalculatedNutrientValue[nutrient.nutrientTypeIndex])
         {
             return nutrientValue[nutrient.nutrientTypeIndex];
@@ -268,7 +275,7 @@ public class CellMetabolism : MonoBehaviour {
             nutrientValue[nutrient.nutrientTypeIndex] = nutrient.CalculateNutrientEffect(genomeSize, genome);
             hasCalculatedNutrientValue[nutrient.nutrientTypeIndex] = true;
             return nutrientValue[nutrient.nutrientTypeIndex];
-        }
+        }*/
     }
 
     void Clone()
